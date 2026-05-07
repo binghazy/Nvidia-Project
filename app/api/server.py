@@ -1,4 +1,6 @@
+import asyncio
 import os
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import List
 
@@ -26,6 +28,9 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 processor: DocumentProcessor | None = None
 rag_service: RAGService | None = None
+
+# Thread pool for CPU-intensive tasks
+executor = ThreadPoolExecutor(max_workers=2)
 
 
 class QuestionPayload(BaseModel):
@@ -72,9 +77,12 @@ async def upload_contracts(files: List[UploadFile] = File(...)):
         saved_paths.append(str(destination))
 
     try:
-        processor.clear_store()
-        processor.add_documents(saved_paths)
-        rag_service.refresh_retriever()
+        # Run CPU-intensive file processing in thread pool to avoid blocking
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(
+            executor,
+            lambda: (processor.clear_store(), processor.add_documents(saved_paths), rag_service.refresh_retriever())
+        )
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Ingestion failed: {exc}") from exc
 
@@ -122,4 +130,3 @@ if os.getenv("ENABLE_LANGSERVE_ROUTES", "0") == "1":
         )
     except Exception:
         pass
-
