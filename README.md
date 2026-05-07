@@ -16,9 +16,8 @@ A Retrieval-Augmented Generation (RAG) application that allows users to upload d
 
 Watch the project in action:
 
-[![Video Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://drive.google.com/file/d/1S5PF5tQSHnEwnMPX72-r4bTdwXcmML3U/view?usp=sharing)
 
-[Full Video Link](https://drive.google.com/file/d/1S5PF5tQSHnEwnMPX72-r4bTdwXcmML3U/view?usp=sharing)
+https://github.com/user-attachments/assets/c9a57e54-4a4e-4e93-9bd0-f6890585bf36
 
 ## Project Structure
 
